@@ -116,7 +116,7 @@ def transform_data(data):
     ord_part = ord_enc.transform(data[['education']])
     ohe_part = ohe.transform(data[ohe_cols])
     num_part = scaler.transform(data[num_cols])
-    pout_part = data[['poutcome']].astype(int).values
+    pout_part = data[['default','housing','loan','poutcome']].astype(int).values
     return np.hstack([num_part, ord_part, ohe_part, pout_part])
 
 
@@ -165,6 +165,27 @@ plt.title("Number of clients that subscribed to a term deposit")
 plt.show()
 
 
-exit()
+# =========================
+# 💾 SAVE FINAL DATA (FIXED)
+# =========================
 
+print("Saving files...")
+
+# 1. Save Features (X)
+np.save("X_train.npy", X_train_final)
+np.save("X_val.npy", X_val_final)
+np.save("X_test.npy", X_test_final)
+
+# 2. Save Targets (y)
+np.save("y_train.npy", y_train.values if hasattr(y_train, 'values') else y_train)
+np.save("y_val.npy", y_val.values if hasattr(y_val, 'values') else y_val)
+np.save("y_test.npy", y_test.values if hasattr(y_test, 'values') else y_test)
+
+# 3. Save cleaned dataset
+df.to_csv("cleaned_dataset.csv", index=False)
+
+print("Done! 7 files are ready to be uploaded directly to GitHub.")
+
+# 🔥 IMPORTANT: force matplotlib to release session
+plt.close('all')
 
